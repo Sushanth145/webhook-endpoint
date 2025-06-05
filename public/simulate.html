@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simulate Webhook Trigger</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { padding: 8px; margin: 8px 0; width: 100%; }
+    label { display: block; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h2>🚀 Simulate Webhook Trigger</h2>
+  <form id="webhookForm">
+    <label>Order ID</label>
+    <input type="text" id="order_id" value="ORD1001" required>
+
+    <label>Status</label>
+    <input type="text" id="status" value="Out for Delivery" required>
+
+    <label>Tracking Number</label>
+    <input type="text" id="tracking_number" value="TRK45678">
+
+    <label>Timestamp</label>
+    <input type="datetime-local" id="timestamp" required>
+
+    <button type="submit">🚀 Trigger Webhook</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('webhookForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const data = {
+        order_id: document.getElementById('order_id').value,
+        status: document.getElementById('status').value,
+        tracking_number: document.getElementById('tracking_number').value,
+        timestamp: new Date(document.getElementById('timestamp').value).toISOString()
+      };
+
+      const res = await fetch('/webhook/shiprocket', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const resultText = await res.text();
+      document.getElementById('result').innerText = `✅ ${resultText}`;
+    });
+  </script>
+</body>
+</html>
